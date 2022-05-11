@@ -29,6 +29,7 @@ router
       attributes: {
         exclude: ["authorId"],
       },
+      order: [["likes", "DESC"]],
       where,
     });
     res.json(blogs);
