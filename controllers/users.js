@@ -20,6 +20,21 @@ router.get("/:username", async (req, res) => {
     where: {
       username,
     },
+    include: [{ model: Blog, as: "blogs" }],
+  });
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404).end();
+  }
+});
+
+router.put("/:username", async (req, res) => {
+  const { username } = req.params;
+  const user = await User.update(req.body, {
+    where: {
+      username,
+    },
   });
   if (user) {
     res.json(user);
