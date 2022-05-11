@@ -11,9 +11,6 @@ Blog.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    author: {
-      type: DataTypes.STRING,
-    },
     url: {
       type: DataTypes.STRING,
       allowNull: false,

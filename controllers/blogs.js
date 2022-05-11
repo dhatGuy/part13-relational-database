@@ -1,25 +1,33 @@
 const router = require("express").Router();
 
-const { Blog } = require("../models");
+const tokenExtractor = require("../middlewares/tokenExtractor");
+const { Blog, User } = require("../models");
 
 const blogFinder = async (req, res, next) => {
-  req.blog = await Blog.findByPk(req.params.id);
+  req.blog = await Blog.findByPk(req.params.id, {
+    include: [{ model: User, as: "author", attributes: ["name"] }],
+    attributes: {
+      exclude: ["authorId"],
+    },
+  });
   next();
 };
 
 router
   .route("/")
   .get(async (req, res) => {
-    const blogs = await Blog.findAll();
+    const blogs = await Blog.findAll({
+      include: [{ model: User, as: "author", attributes: ["name"] }],
+      attributes: {
+        exclude: ["authorId"],
+      },
+    });
     res.json(blogs);
   })
-  .post(async (req, res) => {
-    try {
-      const blog = await Blog.create(req.body);
-      res.json(blog);
-    } catch (error) {
-      return res.status(400).json({ error });
-    }
+  .post(tokenExtractor, async (req, res) => {
+    const user = await User.findByPk(req.decodedToken.id);
+    const blog = await Blog.create({ ...req.body, authorId: user.id });
+    res.json(blog);
   });
 
 router
