@@ -5,7 +5,7 @@ const { Blog, User } = require("../models");
 
 const blogFinder = async (req, res, next) => {
   req.blog = await Blog.findByPk(req.params.id, {
-    include: [{ model: User, as: "author", attributes: ["name"] }],
+    include: [{ model: User, as: "author" }],
     attributes: {
       exclude: ["authorId"],
     },
@@ -43,7 +43,7 @@ router
   })
   .delete(async (req, res) => {
     const blog = req.blog;
-    if (blog) {
+    if (blog && blog.author.id === req.decodedToken.id) {
       await blog.destroy();
     }
     res.status(204).end();
