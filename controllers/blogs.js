@@ -1,6 +1,7 @@
 const router = require("express").Router();
 
 const { Op } = require("sequelize");
+const checkSession = require("../middlewares/checkSession");
 const tokenExtractor = require("../middlewares/tokenExtractor");
 const { Blog, User } = require("../models");
 
@@ -34,7 +35,7 @@ router
     });
     res.json(blogs);
   })
-  .post(tokenExtractor, async (req, res) => {
+  .post(tokenExtractor, checkSession, async (req, res) => {
     const user = await User.findByPk(req.decodedToken.id);
     const blog = await Blog.create({ ...req.body, authorId: user.id });
     res.json(blog);

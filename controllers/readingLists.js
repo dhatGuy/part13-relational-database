@@ -1,10 +1,8 @@
 const router = require("express").Router();
 
-const { Blog } = require("../models");
-const User = require("../models/user");
 const ReadingList = require("../models/reading_list");
-const { sequelize } = require("../util/db");
 const tokenExtractor = require("../middlewares/tokenExtractor");
+const checkSession = require("../middlewares/checkSession");
 
 router.post("/", async (request, response) => {
   const { userId, blogId } = request.body;
@@ -17,7 +15,7 @@ router.post("/", async (request, response) => {
   response.json(readingList);
 });
 
-router.put("/:id", tokenExtractor, async (request, response) => {
+router.put("/:id", tokenExtractor, checkSession, async (request, response) => {
   const { id } = request.params;
   const { read } = request.body;
 
