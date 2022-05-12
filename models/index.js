@@ -1,6 +1,6 @@
 const Blog = require("./blog");
 const User = require("./user");
-const ReadingList = require("./reading_list");
+const UserReadingList = require("./reading_list");
 
 User.hasMany(Blog, {
   foreignKey: "authorId",
@@ -11,11 +11,11 @@ Blog.belongsTo(User, {
   as: "author",
 });
 
-Blog.belongsToMany(User, { through: ReadingList, as: "readingList" });
-User.belongsToMany(Blog, { through: ReadingList, as: "readingList" });
+Blog.belongsToMany(User, { through: UserReadingList, as: "readingList" });
+User.belongsToMany(Blog, { through: UserReadingList, as: "readingList" });
 
 module.exports = {
   Blog,
   User,
-  ReadingList,
+  UserReadingList,
 };
