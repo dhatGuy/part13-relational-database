@@ -10,9 +10,6 @@ Blog.belongsTo(User, {
   as: "author",
 });
 
-User.sync({ alter: true });
-Blog.sync({ alter: true });
-
 module.exports = {
   Blog,
   User,
